@@ -1,6 +1,6 @@
 '''
 Created on 26 Aug 2015
-
+Geodesy Project to Calculate the offset between predicted ephermeris and post calculated precise ephemeris
 @author: craig
 '''
 from geodesyDec import GeodesyObject
