@@ -1,0 +1,74 @@
+\section {Preliminaries}
+\subsection{Ellipsoid Radius}
+The local ellipsoid radius is  calculated using the Cartesian coordinates or the geographic coordinates as follows:
+\begin{equation} 
+r(\varphi)= \sqrt{x^{2}+y^{2}+z^{2}} = a \sqrt{1-\dfrac{e^{2}(1-e^{2})\sin^{2}\varphi}{1-e^{2}sin^{2}\varphi}}
+\end{equation}
+$ e^{2} $ is the ellipsoidal first eccentricity. 
+$ e=\dfrac{E}{a} $ where$  E=\sqrt{a^{2}-b^{2}} $. a and b are the semi-major and semi-minor axes respectively.
+\subsection{Geocentric Coordinates}
+Spherical harmonic models are formulated in geocentric  coordinates (the ellipsoidal coordinates). The longitude remains the same for both but the latitude for a given geographic coordinate location is converted to a geocentric location using the formula :
+\begin{equation} 
+(\varphi^{*})= 
+\Big[  \big(  \dfrac{b}{a}  \big)^{2} tan \varphi \Big]
+\end{equation}
+\subsection{ Normal Gravity}
+The normal gravity $ \gamma_{0}$ is a function of latitude is  calculated using:
+\begin{equation} 
+\gamma(\phi)= \gamma_{e}\dfrac{1+ksin^{2}\phi}{\sqrt{1-e^{2}sin^{2}\phi}}
+\end{equation}
+where $\phi  $ is the latitude of the point of interest.
+the values of $ \gamma_{e},k \ and \ e^{2} $ are inserted as geometric constants gathered from the ellipsoid of choice, where $ \gamma_{e} $ is the normal gravity at the equator and $ e^{2} $ is the first eccentricity. $ k $ is given as a constant but can also be calculated $ k=\dfrac{b_{y_{b}}-a_{y_{a}}}{a_{y_{a}}} $.
+
+
+\section{Legendre Polynomials and Functions}
+Zonal Legendre functions of order 0 are called Legendre polynomials \cite{nicoPhysicalgeodesy}. They are polynomials in $ t =cos \theta $. 
+The Legendre polynomials were calculated as follows...
+
+Step 1 using Rodrigues Formula:
+\begin{equation} 
+P_{l}(t) = \dfrac{1}{2^{l}l!}\dfrac{d^{l}(t^{2}-1)^{l}}{dt^{l}}
+\end{equation}
+Step 2 using Ferrers Formula:
+\begin{equation} 
+P_{lm}(t) = (1-t^{2})^{m/2}\dfrac{d^{m}P_{l}(t)}{dt^{m}}
+\end{equation}
+
+\subsection{Fully Normalised associated Legendre Functions}
+The abbreviations $ t=sin \varphi^{*} \ and \ u=cos\varphi^{*} $ are used below. The normalisation process applied to an associated Legendre function is as follows:
+\begin{equation} 
+\bar{P}_{n,m}(t) = \sqrt{(k(2n+1))\dfrac{(n-m)!}{(n+m)!}}P_{n,m}(t)
+\end{equation}
+
+\subsection{Recursive Formula}
+$ P_{n,m}(t) $ can be calculated using recursive formulas as well:
+\begin{equation} 
+\begin{aligned}
+P_{n+1,0}(t) & = (2n+1) t P_{n,0}(t) - nP_{n-1,0}(t) \\
+P_{n,n}(t) & = (2n-1) u P_{n-1,n-1}(t) \\
+P_{n,m}(t) & = P_{n-2,m}(t)+(2n-1)uP_{n-1,m-1}(t)
+\end{aligned}
+\end{equation}
+
+The following starting values are required:
+\begin{equation} 
+\begin{aligned}
+P_{0,0}(t) & = 1 \\
+P_{1,0}(t) & = t \\
+P_{1,1}(t) & = u \\
+P_{2,0}(t) & = \frac{3}{2} t^{2} - \dfrac{1}{2}\\
+P_{2,1}(t) & = 3ut \\
+P_{2,2}(t) & = 3u^{2} 
+\end{aligned}
+\end{equation}
+
+
+\section{(Calculate Geoid undulation N as a function of Longitude and Latitude)}
+\begin{equation} 
+N(\lambda,\varphi)=\dfrac{GM_{g}}{\gamma(\varphi)r(\varphi)}\sum\limits_{n=2}^\infty  \big( \dfrac{a_{g}}{r(\varphi)} \big) \sum\limits_{m=0}^n 
+\Big[  \bar{C}_{n,m}cos(m\lambda) +  \bar{S}_{n,m}sin(m\lambda)   \Big] \bar{P}_{nm}(cos\varphi^{*})
+\end{equation}
+	
+ $ \bar{C}_{n,m}$ and $ \bar{S}_{n,m}$ are the spherical harmonic coefficients of degree and order $ n$ , $ m$ respectively. The mass gravity constant $ GM_{\mathrm{g}}$ and the scale factor $ a_{\mathrm{g}}$ are from the geopotential model. $ \bar{P}_{n,m}(cos\bar{\varphi})$ fully normalized associated Legendre functions. The harmonics $ \bar{P}_{n,m}$ are evaluated at the geocentric latitude $ {\varphi}^{*}$, ( not at the geographical latitude) $ \varphi$. 
+
+

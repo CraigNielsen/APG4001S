@@ -1,0 +1,18 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Aims and Objectives}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Overview}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{Find an expression for N as a function of the disturbing potential T }{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.3}{Relate the disturbing potential T on the Geoid to the gravity anomoly}{chapter.2}% 5
+\BOOKMARK [0][-]{chapter.3}{Geoid Determination}{}% 6
+\BOOKMARK [1][-]{section.3.1}{Laplace Equation}{chapter.3}% 7
+\BOOKMARK [1][-]{section.3.2}{Spherical Harmonics}{chapter.3}% 8
+\BOOKMARK [0][-]{chapter.4}{Method}{}% 9
+\BOOKMARK [1][-]{section.4.1}{Preliminaries}{chapter.4}% 10
+\BOOKMARK [2][-]{subsection.4.1.1}{Ellipsoid Radius}{section.4.1}% 11
+\BOOKMARK [2][-]{subsection.4.1.2}{Geocentric Coordinates}{section.4.1}% 12
+\BOOKMARK [2][-]{subsection.4.1.3}{ Normal Gravity}{section.4.1}% 13
+\BOOKMARK [1][-]{section.4.2}{Legendre Polynomials and Functions}{chapter.4}% 14
+\BOOKMARK [2][-]{subsection.4.2.1}{Fully Normalised associated Legendre Functions}{section.4.2}% 15
+\BOOKMARK [2][-]{subsection.4.2.2}{Recursive Formula}{section.4.2}% 16
+\BOOKMARK [1][-]{section.4.3}{\(Calculate Geoid undulation N as a function of Longitude and Latitude\)}{chapter.4}% 17
+\BOOKMARK [0][-]{chapter.5}{Results}{}% 18

@@ -1,0 +1,25 @@
+
+\section{Overview}
+The objective of this paper is the determination of orthometric heights for five Trignet stations, given a GGMO2S Grace geopotential model to degree and order 160. The GRS80 ellipsoid characteristics will be used in the calculations.
+
+In order to calculate the orthometric heights of the stations, the Geoidal height above the Ellipsoidal must be calculated as a function of gravity. The following steps breakdown this process.
+\begin{enumerate}
+	\item Find an expression for N as a function of the disturbing potential T
+	\item Relate the disturbing potential T on the Geoid to the gravity anomoly $ \Delta g $
+ This will allow an expression for N as a function of $ \Delta g $to be derived.
+\end{enumerate}
+
+\section{Find an expression for N as a function of the disturbing potential T }
+This can be accomplished using Bruns formula.
+\begin{equation} 
+N = \dfrac{T_{p}}{\gamma_{0}}
+\end{equation}
+
+\section{Relate the disturbing potential T on the Geoid to the gravity anomoly}
+$ \Delta g = (g_{P}- \gamma_{O})  $
+and simplifying the Fundamental Gravimetric Equation to derive 
+\begin{equation} 
+\Delta g = -\dfrac{\delta T}{\delta n}-\dfrac{2}{a}.T
+\end{equation}
+using Laplace's Equation $ \Delta T \equiv 0 $
+and the boundary condition above, solving for T.

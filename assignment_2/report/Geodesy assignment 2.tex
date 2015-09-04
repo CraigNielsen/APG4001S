@@ -1,0 +1,64 @@
+\documentclass[english]{report}
+\usepackage[a4paper]{geometry}
+\geometry{textwidth=0.8\paperwidth, textheight=0.9\paperheight, noheadfoot, nomarginpar}
+\setlength{\topskip}{0mm}
+\setlength{\parindent}{10mm}
+\usepackage{geometry}
+\geometry{verbose,headsep=50pt}
+\usepackage{babel}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+%\setcitestyle{authoryear,open={(},close={)}}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{gensymb}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\usepackage{caption}
+\graphicspath{ {../images/} }
+\usepackage{titlesec}
+ \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\titleformat{\chapter}{\normalfont\huge}{\thechapter.}{24pt}{\huge\it}
+
+%removes chapternumber%
+\usepackage{setspace}
+%\doublespacing
+\pagestyle{fancy}
+\usepackage[colorlinks=false,hidelinks]{hyperref}
+\begin{document}
+
+\input{./title.tex}
+%\tableofcontents
+%\listoffigures
+\chapter*{The Normal Heights Correction}
+\subsection*{Introduction}
+When precise leveling along a route, variations gravity can cause misclosures in levelling loops. The corrections for these level height differences when  using a Normal Heighting system is discussed.A Normal Heighting System is with reference to above the quasi-geoid.
+\subsection*{Formula}
+\begin{equation}
+			H^{N}_{B} -  H^{N}_{B} =\sum_{A}^{B}\delta n + \sum_{A}^{B}\dfrac{g-G}{G}.\delta n +H^{N}_{B}\dfrac{G-\bar{\gamma_{B}}}{G} -
+			H^{N}_{A}\dfrac{G-\bar{\gamma_{A}}}{G} 
+\end{equation}
+
+The first term on the right part of the equation is the usual sum of height differences for levelling. The last three are the correction that is applied. 
+The last two are of course required as the left hand side of the equation is a difference. The correction for each point is easy to identify using subscripts.
+
+\subsection*{Gamma Specifics}
+$ {\gamma} $ is the normal gravity on the ellipsoid and can be calculated using the formula for normal gravity on the ellipsoid. For our purposes some approximations are introduced and a particular version of $ \gamma $ for our normal heights system is obtained:
+\begin{equation}
+  \bar{\gamma} = \gamma - 0.1543 H \  mgal
+\end{equation}
+
+ 
+It is important to note that $ \bar{\gamma} $ returns a value in mgal units, where 100 gal is equivalent to $ 1m/s^{2} $ (or $ 1gal=1cm/s^{2} $). The formula for Vignal's Normal Height must be used carefully making sure all units correspond.
+
+\subsection*{Results}
+\input{Myresults.tex}
+
+\renewcommand{\bibname}{References}
+\bibliography{references}
+
+\end{document}
