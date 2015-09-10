@@ -6,15 +6,19 @@ Created on 22 Jul 2015
 from math import factorial, sqrt
 import math
 import scipy.special
-
+import sys
 from numpy import cos, sin
 from numpy import float_, polynomial
 from numpy.polynomial.legendre import legval2d
 from scipy.constants.constants import pi
+from Broacast_Ephemeris_Algorithm import broadCastEphemeris
+import re
+import matplotlib.pyplot as plt
 
 import decimal as DEC
 import numpy as np
 import sympy as sp
+from natsort import natsorted
 
 
 # import fortranformat as ff
@@ -45,6 +49,7 @@ class GeodesyObject(object):
         self.J8 =-0.00000000001427
         self.P={}
         self.P_normalised={}
+        self.currentRinex={}
         
         
     def  normaliseP(self,n,m,Theta):
@@ -123,7 +128,6 @@ class GeodesyObject(object):
             
     def getN(self,location_): 
 
-
         Lamda=float_(location_.longitude)
         self.getAllFortranP(cos(pi/2. - location_.latitude))
         self.getAllFortanPNormalised()
@@ -145,13 +149,8 @@ class GeodesyObject(object):
                 S=self.getS(n,m)
                 P=self.P_normalised[item]
 #                 P=self.normaliseP(n,m,cos(pi/2. - Latitude))
-
                 l=(cos(float_(m*Lamda)))
-
-
                 part1=(C* float_(l))
-
-
                 part2=( S * float_(sin(float_(m*Lamda) ) ))
 
                 innersum+=( part1 + part2 )*(P)
@@ -218,8 +217,17 @@ class GeodesyObject(object):
     def getD(self):
         d=1
         return d
-    def readIGS(self,filename):
-        
+    def readIGS(self,filename,satellite):
+        r=[]
+
+        #file structure as follows when done:
+            # for sat in precD.keys():
+    #     if sat=="PG21":
+    #         for time in precD[sat].keys():
+    #             if time == "18  0":
+    #                 print precD[sat][time]["x"]
+    #                 print precD[sat][time]["y"]
+    #                 print precD[sat][time]["z"]
         with open (filename,"r") as file:
             lines = file.readlines()
             i=0
@@ -237,11 +245,15 @@ class GeodesyObject(object):
                 name=lines[i][:4]
                 inDic={}
                 timeDic={}
-                inDic["x"]=float_(lines[i][4:19])
+                x=float_(lines[i][4:19])
+                inDic["x"]=x
 #                 print lines[i][4:19]
-                inDic["y"]=float_(lines[i][20:33])
-                inDic["z"]=float_(lines[i][34:48])
-                
+                y=float_(lines[i][20:33])
+                inDic["y"]=y
+                z=float_(lines[i][34:48])
+                inDic["z"]=z
+                if name==satellite:
+                    r.append(sqrt(x**2+y**2+z**2)*1000)
                 
                 if name in dict_:
                     dict_[name][time]=inDic 
@@ -249,12 +261,28 @@ class GeodesyObject(object):
                     timeDic[time]=inDic
                     dict_[name]=timeDic
                 i+=1
-        return dict_
-    
+        return dict_,r
+    # Broadcast Ephemeris Functions_______________________________________
+
+
+    #_____________________________________________________________
+    #_________________________READ AND WRITE FILES ____________________
     def readInRinex(self,filename):
+        # reads in Rinex file of satellite parameters
+        '''
+        :structure of return dict: dictionary["satellite number"]["time"]["parameter"]
+
+        '''
+
+
         endOfHeader=False
         space=19
         dict_={}
+        def _e(str):
+            if str.lstrip()=="":return
+            i=(str.replace("D","e"))
+            j   =(float_)(i.replace("E","e"))
+            return j
         with open(filename,"r") as file:
             lines=file.readlines()
             i=0
@@ -272,44 +300,46 @@ class GeodesyObject(object):
 
                         inDic={}
                         timeDic={}
-                        inDic["svBias"]=lines[i][22:41]
-                        inDic["svDrift"]=lines[i][42:61]
-                        inDic["svDRate"]=lines[i][61:81]
+
+
+                        inDic["svBias"]=_e(lines[i][22:41])
+                        inDic["svDrift"]=_e(lines[i][42:61])
+                        inDic["svDRate"]=_e(lines[i][61:81])
                         i+=1
                         
-                        inDic["IODE"]=lines[i][3:22]
-                        inDic["crs"]=lines[i][22:41]
-                        inDic["DelN"]=lines[i][41:60]
-                        inDic["MO"]=lines[i][60:81]
+                        inDic["IODE"]=_e(lines[i][3:22])
+                        inDic["Crs"]=_e(lines[i][22:41])
+                        inDic["DeltaN"]=_e(lines[i][41:60])
+                        inDic["MO"]=_e(lines[i][60:81])
                         i+=1
-                        inDic["Cuc"]=lines[i][3:22]
-                        inDic["e"]=lines[i][22:41]
-                        inDic["Cus"]=lines[i][41:60]
-                        inDic["sqrtA"]=lines[i][60:81]
+                        inDic["Cuc"]=_e(lines[i][3:22])
+                        inDic["e"]=_e(lines[i][22:41])
+                        inDic["Cus"]=_e(lines[i][41:60])
+                        inDic["sqrtA"]=_e(lines[i][60:81])
                         i+=1
                             
-                        inDic["Toe"]=lines[i][3:22]
-                        inDic["Cic"]=lines[i][22:41]
-                        inDic["OMEGA"]=lines[i][41:60]
-                        inDic["CIS"]=lines[i][60:81]
+                        inDic["Toe"]=_e(lines[i][3:22])
+                        inDic["Cic"]=_e(lines[i][22:41])
+                        inDic["OMEGA"]=_e(lines[i][41:60])
+                        inDic["CIS"]=_e(lines[i][60:81])
                         i+=1
-                        inDic["i0"]=lines[i][3:22]
-                        inDic["Crc"]=lines[i][22:41]
-                        inDic["omega"]=lines[i][41:60]
-                        inDic["OMEGA DOT"]=lines[i][60:81]
+                        inDic["i0"]=_e(lines[i][3:22])
+                        inDic["Crc"]=_e(lines[i][22:41])
+                        inDic["omega"]=_e(lines[i][41:60])
+                        inDic["OMEGA DOT"]=_e(lines[i][60:81])
                         i+=1
-                        inDic["IDOT"]=lines[i][3:22]
-                        inDic["L2"]=lines[i][22:41]
-                        inDic["GPS Week"]=lines[i][41:60]
-                        inDic["L2 P"]=lines[i][60:81]
+                        inDic["IDOT"]=_e(lines[i][3:22])
+                        inDic["L2"]=_e(lines[i][22:41])
+                        inDic["GPS Week"]=_e(lines[i][41:60])
+                        inDic["L2 P"]=_e(lines[i][60:81])
                         i+=1
-                        inDic["SV accuracy"]=lines[i][3:22]
-                        inDic["SV health"]=lines[i][22:41]
-                        inDic["TGD"]=lines[i][41:60]
-                        inDic["IODC"]=lines[i][60:81]
+                        inDic["SV accuracy"]=_e(lines[i][3:22])
+                        inDic["SV health"]=_e(lines[i][22:41])
+                        inDic["TGD"]=_e(lines[i][41:60])
+                        inDic["IODC"]=_e(lines[i][60:81])
                         i+=1
-                        inDic["Transmission time"]=lines[i][3:22]
-                        inDic["Fit interval"]=lines[i][22:41]
+                        inDic["Transmission time"]=_e(lines[i][3:22])
+                        inDic["Fit interval"]=_e(lines[i][22:41])
 
                           
                         
@@ -320,14 +350,63 @@ class GeodesyObject(object):
                             dict_[name]=timeDic
 
                     else:i+=1
+        self.currentRinex=dict_
         return dict_        
-        
+    def getTimes(self,sat,printout=False):
+        times=[]
+
+        for name in self.currentRinex.keys():
+                if name==sat:
+                    for time in self.currentRinex[name].keys():
+
+                        times.append(time)
+
+        times=natsorted(times)
+        if printout:print times
+        return times
+
+
+    def get_position_at_time(self,list,time):
+        interval=900
+        value=int(time[0:2])*3600+int (time[3:5])*60+int (time[6:])
+        print value
+        value=value/interval
+        print "element:",value
+        return list[value]
+
+    def getEarthCenteredCoordinates(self,name,time):
+        x=broadCastEphemeris(self.currentRinex)
+        ephemeris,ran=x.getEphemeris(name,time)
+        return ephemeris,ran
                     
-                    
-                    
+    def compare(self,list1,list2,time):
+        list1=np.array(list1)
+        list2=np.array(list2)
+        R=list1-list2
+
+
+        length = len(list1)
+
+###              Plotting
+        counter =[]
+        for c in range (0,1440,15):
+            counter +=[c]
+        t = R[:96]
+        timeo=int(int(time[0:2])*60+int(time[3:5])+(int(time[6:])/60))
+        circle1=plt.Circle((timeo,0),1,color='g')
+        plt.gca().add_artist(circle1)
+        plt.plot(counter, t, '-', color='blue')
+        plt.ylim([-200, 200])
+        plt.xticks(np.arange(0, 1440, 120))
+        plt.title("Radial Differences(Precise - Broadcast) time:"+time[0:2]+":"+time[3:5]+":"+time[6:])
+        plt.plot()
+        # plt.show()
+        # plt.savefig(time+".png", bbox_inches='tight')
+        plt.close()
+
+        return R
                     
         #return dict object with key and dict of values
-        
         
     def readIn(self,filename):
         np.set_printoptions(precision=22)
@@ -352,6 +431,7 @@ class GeodesyObject(object):
     
     def writeOut(self,filename):
         fo = open(self.dir+filename, "w")
+
 #         line = ff.FortranRecordWriter('(A1, A1, A20)')
 #         line = ff.FortranRecordWriter('(3F15.12)')
         for i in range(161):
@@ -364,9 +444,8 @@ class GeodesyObject(object):
 #                     fo.write("GCOEFC1"+" "+str(j)+" "+str(i)+" "+("%0.14g" % data)+"\n")
         print "finished writing: "+filename
         fo.close()
-        
-        
-        
+
+# _____________________________________________________________
         
         
         
