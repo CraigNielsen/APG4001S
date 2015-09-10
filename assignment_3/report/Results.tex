@@ -1,0 +1,28 @@
+\section{Results}
+
+Figure: \ref{fig:1} shows the difference in radial distance along the y-axis in meters and the number of minutes in that day along the x axis. The small dot along the line y=0 shows the position of the satellite at the specific epoch. The first 6 pass-overs for satellite 21 are shown. It can be seen that each broadcast ephemeris is only within 2m precision for 240 mins (120 mins before and 120 mins after broadcast). After this time, a new ephemeris should be calculated. Figure \ref{fig:2} shows a zoomed in version with the same x and y axis values and units. It clearly represents the large increase in error that occurs after 120 minutes. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\textwidth]{r1.png}
+	\caption{Various Times for Radial Differences}
+	\label{fig:1}
+\end{figure} 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\textwidth]{6.png}
+	\caption{Radial Differences (Precise - Broadcast) time-06h00}
+	\label{fig:2}
+\end{figure} 
+
+\input{rms.tex}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{rms.png}
+	\caption{Radial Differences at 15min Intervals (Color Coded)}
+	\label{fig:3}
+\end{figure} 
+The RMS calculations between ephemeris for the epoch 06:00:00 are shown in table \ref{tab:1} and figure \ref{fig:3}. Figure \ref{fig:3} is colour coded for improved visual interpretation.
+
+The mins column show how much time before and after the navigation message. 
+ It can be seen that there is not much improvement from 15 mins to 120 mins each side, but RMS rises above 2m after 180 minutes and continues to become unstable reaching over 16m after 5 hours.
